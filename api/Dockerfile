@@ -1,12 +1,17 @@
-FROM golang:1.20-alpine
-WORKDIR /app
-
-COPY go.mod go.sum ./
+FROM golang:alpine AS builder
+RUN mkdir /build
+ADD . /build/
+WORKDIR /build
 RUN go mod download
-COPY . .
-
 RUN go build -o main .
 
-EXPOSE 8080
+
+FROM alpine
+RUN adduser -S -D -H -h /app appuser
+USER appuser
+COPY . /app
+COPY --from=builder /build/main /app/
+WORKDIR /app
+EXPOSE 3000
 
 CMD ["./main"]

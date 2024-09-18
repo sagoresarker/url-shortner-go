@@ -9,6 +9,7 @@ func EnforceHTTP(url string) string {
 	if url[0:4] != "http" {
 		return "http://" + url
 	}
+	return url
 }
 
 func RemoveDomainError(url string) bool {
